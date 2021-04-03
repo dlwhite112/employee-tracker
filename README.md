@@ -41,6 +41,7 @@ An organized team is a successful, well-oiled machine.  Utilizing this CLI, the 
   
   ## Screenshots
   
+  <img width="1536" alt="Screen Shot 2021-04-03 at 2 23 30 PM" src="https://user-images.githubusercontent.com/74333123/113489196-67a10100-9488-11eb-97e1-a4277f173fee.png">
   
   ## Tools
   * Node.js - version 14.16.0 LTS
@@ -50,6 +51,7 @@ An organized team is a successful, well-oiled machine.  Utilizing this CLI, the 
   
   ## Link
   
+  https://user-images.githubusercontent.com/74333123/113489163-3a545300-9488-11eb-9b11-4bd7f962e27a.mp4
   
   ## Questions
   Please see my GitHub: https://github.com/dlwhite112

@@ -2,12 +2,16 @@ const cTable = require("console.table");
 var inquirer = require("inquirer");
 const {
   viewFromTable,
-  updateTable,
+  initTable,
   removeFromTable,
   addDept,
   currentDepartmentList,
+  currentEmployeeList,
   currentRoleList,
   addRoleEntry,
+  addEmployeeEntry,
+  updateEmployee,
+  viewAllEmployees,
 } = require("./db/class");
 const connection = require("./db/connection");
 
@@ -39,9 +43,22 @@ let viewPropmt = [
 let updatePropmt = [
   {
     type: "list",
-    message: "Which would you like to update?",
-    name: "updateChoice",
-    choices: promptChoices,
+    message: "Which employee would you like to update?",
+    name: "updateEmployee",
+    choices: currentEmployeeList(),
+  },
+  {
+    type: "list",
+    message: `What is the updated role #? 
+    1: "Sales Lead",
+    2: "Salesperson"
+    3: "Lead Engineer"
+    4: "Software Engineer"
+    5: "Accountant"
+    6: "Legal Team Lead"
+    7: "Lawyer"`,
+    name: "role",
+    choices: [1, 2, 3, 4, 5, 6, 7],
   },
 ];
 let removePropmt = [
@@ -87,20 +104,7 @@ let newDepartment = [
 const addDepartment = () => {
   inquirer.prompt(newDepartment).then((answers) => {
     addDept(answers.newDepartment);
-  });
-};
-
-let newManager = [
-  {
-    type: "input",
-    message: "What is the new manager you'd like to add?",
-    name: "newManager",
-  },
-];
-const addManager = () => {
-  inquirer.prompt(newManager).then((answers) => {
-    // something that makes a new entry into the table using the answers
-    console.log(`added a new department using ${answers.newManager}`);
+    init();
   });
 };
 
@@ -121,17 +125,10 @@ let newEmployee = [
     name: "role",
     choices: currentRoleList(),
   },
-  {
-    type: "list",
-    message: "Who it the employee's manager?",
-    name: "manager",
-    choices: "managerList",
-  },
 ];
 const addEmployee = () => {
   inquirer.prompt(newEmployee).then((answers) => {
-    // something that makes a new entry into the table using the answers
-    console.log(`added an employee using ${answers}`);
+    addEmployeeEntry(answers);
   });
 };
 
@@ -161,9 +158,9 @@ function view() {
     viewFromTable(answers.viewChoice);
   });
 }
-function update() {
+function updateRole() {
   inquirer.prompt(updatePropmt).then((answers) => {
-    updateTable(answers.updateChoice);
+    updateEmployee(answers);
   });
 }
 function remove() {
@@ -182,14 +179,14 @@ init = () => {
         view();
         break;
       case "Update":
-        update();
+        updateRole();
         break;
       case "Remove":
         remove();
         break;
       default:
-        connection.end()
-        console.log("program ended")
+        connection.end();
+        console.log("program ended");
     }
   });
 };

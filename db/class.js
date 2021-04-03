@@ -1,6 +1,13 @@
 const connection = require("./connection");
 
 class DB {
+  initTable() {
+    return connection.query(`SELECT * FROM employee`, (err, res) => {
+      if (err) throw err;
+      console.table(res);
+    });
+  }
+
   viewAllEmployees() {
     //return all the emoloyees
     return connection.query("SELECT * FROM employee");
@@ -24,11 +31,20 @@ class DB {
     return results;
   }
 
+  currentEmployeeList() {
+    const query = "SELECT first_name FROM employee";
+    var results = [];
+    connection.query(query, (err, res) => {
+      res.forEach(({ first_name }) => results.push(first_name));
+    });
+    return results;
+  }
+
   viewFromTable(selection) {
-    return connection.query(`SELECT * FROM ${selection}`, (err,res) => {
+    return connection.query(`SELECT * FROM ${selection}`, (err, res) => {
       if (err) throw err;
-      console.table(res)
-      init()
+      console.table(res);
+      init();
     });
   }
   removeFromTable(selection) {
@@ -39,26 +55,24 @@ class DB {
   addDept(answers) {
     return (
       connection.query(`INSERT INTO department (name) VALUE ("${answers}")`),
-      console.log(`you added a new ${answers}!`)
+      console.log(`you added a new department!`)
     );
   }
   deptObj = {
-    2: "Sales",
-    3: "Engineering",
-    4: "Finance",
-    5: "Legal",
+    1: "Sales",
+    2: "Engineering",
+    3: "Finance",
+    4: "Legal",
   };
+
   roleObj = {
-
-  }
-
-  getId = (answers) => {
-    return connection.query(
-      `"SELECT id FROM department WHERE sales "`,
-      (err, res) => {
-        res;
-      }
-    );
+    1: "Sales Lead",
+    2: "Salesperson",
+    3: "Lead Engineer",
+    4: "Software Engineer",
+    5: "Accountant",
+    6: "Legal Team Lead",
+    7: "Lawyer",
   };
 
   getDepts() {
@@ -101,31 +115,44 @@ class DB {
     let first = answers.firstName;
     let last = answers.lastName;
     let role = key;
-    let manager = key2;
-
 
     connection.query(
-      "INSERT INTO role SET ?",
+      "INSERT INTO employee SET ?",
       {
         first_name: first,
         last_name: last,
         role_id: role,
-        manager_id: manager,
       },
       function (err) {
         if (err) throw err;
-        console.log("you added a new role!");
+        console.log("you added a new employee!");
+        init();
+      }
+    );
+  };
+
+  updateEmployee(answers) {
+    let newRole = answers.role;
+    let first = answers.updateEmployee;
+
+    connection.query(
+      `UPDATE employee SET ? WHERE ?`,
+      [
+        {
+          role_id: newRole,
+        },
+        {
+          first_name: first,
+        },
+      ],
+      function (err) {
+        if (err) throw err;
+        console.log("you updated an employe role!");
         init();
       }
     );
   }
-
-  updateTable(selection) {
-    // update "${selection}"
-    console.log(`You updated ${selection}`);
-  }
 }
 
-// module.exports = DB;
 const db = new DB(connection);
 module.exports = db;

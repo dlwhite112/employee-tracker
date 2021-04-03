@@ -1,7 +1,6 @@
 const connection = require("./connection");
 
 class DB {
-  // these are the "view" functinos
   viewAllEmployees() {
     //return all the emoloyees
     return connection.query("SELECT * FROM employee");
@@ -26,8 +25,11 @@ class DB {
   }
 
   viewFromTable(selection) {
-    // return managers from table
-    return connection.query(`SELECT * FROM ${selection}`);
+    return connection.query(`SELECT * FROM ${selection}`, (err,res) => {
+      if (err) throw err;
+      console.table(res)
+      init()
+    });
   }
   removeFromTable(selection) {
     //remove ${selection} from table
@@ -35,7 +37,6 @@ class DB {
   }
 
   addDept(answers) {
-    //INSERT INTO tbl VALUES ("va­l1", "­val­2");
     return (
       connection.query(`INSERT INTO department (name) VALUE ("${answers}")`),
       console.log(`you added a new ${answers}!`)
@@ -47,6 +48,9 @@ class DB {
     4: "Finance",
     5: "Legal",
   };
+  roleObj = {
+
+  }
 
   getId = (answers) => {
     return connection.query(
@@ -86,6 +90,35 @@ class DB {
       }
     );
   };
+
+  addEmployeeEntry = (answers) => {
+    const value = answers.role;
+
+    const key = Object.keys(this.roleObj)[
+      Object.values(this.roleObj).indexOf(value)
+    ];
+
+    let first = answers.firstName;
+    let last = answers.lastName;
+    let role = key;
+    let manager = key2;
+
+
+    connection.query(
+      "INSERT INTO role SET ?",
+      {
+        first_name: first,
+        last_name: last,
+        role_id: role,
+        manager_id: manager,
+      },
+      function (err) {
+        if (err) throw err;
+        console.log("you added a new role!");
+        init();
+      }
+    );
+  }
 
   updateTable(selection) {
     // update "${selection}"

@@ -9,7 +9,7 @@ const {
   currentRoleList,
   addRoleEntry,
 } = require("./db/class");
-// const db = require("./db");
+const connection = require("./db/connection");
 
 const promptChoices = ["employee", "role", "department"];
 let initPrompt = [
@@ -17,7 +17,7 @@ let initPrompt = [
     type: "list",
     message: "What would you like to do today?",
     name: "initChoice",
-    choices: ["Add", "View", "Update", "Remove"],
+    choices: ["Add", "View", "Update", "Remove", "End"],
   },
 ];
 let addPropmt = [
@@ -124,7 +124,7 @@ let newEmployee = [
   {
     type: "list",
     message: "Who it the employee's manager?",
-    name: "department",
+    name: "manager",
     choices: "managerList",
   },
 ];
@@ -188,7 +188,8 @@ init = () => {
         remove();
         break;
       default:
-        generateHtml();
+        connection.end()
+        console.log("program ended")
     }
   });
 };
